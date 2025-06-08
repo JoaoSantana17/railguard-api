@@ -1,68 +1,119 @@
-# RailGuard API
+# Ainda Tem? – API
 
-API desenvolvida com **Flask** para monitoramento de atividades suspeitas e alertas nas Linhas 8-Diamante e 9-Esmeralda da CPTM. Hospedada na Vercel.
+API desenvolvida com **Flask** para gerenciar recursos essenciais em situações de emergência, permitindo que cidadãos e órgãos oficiais cadastrem e localizem pontos de ajuda próximos.
 
-> URL Base: https://railguard-api.vercel.app
+> **URL Base:** https://aindatem-api.vercel.app
 
 ---
 
-###  Login
+##  Usuário
 
-#### `GET /login`
-Lista os usuários disponíveis (sem mostrar senhas).
-
-#### `POST /login`
-Realiza o login com `username` e `senha`.
+### `POST /usuario`
+Cadastra um novo usuário.
 
 **Body (JSON):**
 ```json
 {
-  "username": "admin",
+  "email": "exemplo@email.com",
   "senha": "1234"
 }
 ```
 
 ---
 
-###  Alertas
-
-#### `GET /alertas`
-Retorna todos os alertas cadastrados.
-
-#### `POST /alertas`
-Adiciona um novo alerta.
+### `POST /usuario/login`
+Realiza login do usuário.
 
 **Body (JSON):**
 ```json
 {
-  "Linha": "8-Diamante",
-  "vagao": "2",
-  "atividade": "Movimentação Suspeita"
+  "email": "exemplo@email.com",
+  "senha": "1234"
 }
 ```
 
-#### `PUT /alertas/<id>`
-Atualiza o status de um alerta existente.
-
-**Body (JSON):**
+**Resposta:**
 ```json
 {
-  "status": "resolvido"  // ou "ignorado", "ativo"
+  "message": "Login realizado com sucesso!",
+  "user": {
+    "email": "exemplo@email.com",
+    "nome": "João",
+    "tipo": "Cidadão"
+  }
 }
 ```
-
-#### `DELETE /alertas/<id>`
-Remove um alerta pelo ID.
 
 ---
 
-### Monitoramento
+##  Recursos
 
-#### `GET /monitoramento`
-Retorna os dados de todas as linhas e vagões monitorados.
+### `GET /recursos`
+Retorna todos os recursos cadastrados. Aceita filtros por `recurso`, `fonte` e `distancia`.
 
-#### `GET /monitoramento/<linha>`
-Retorna os dados de uma linha específica (`8-diamante` ou `9-esmeralda`).
+**Exemplo:**
+```
+GET /recursos?recurso=Água&fonte=Comunitária&distancia=Até 5Km
+```
+
+**Resposta:**
+```json
+[
+  {
+    "nome": "Associação de Bairro",
+    "recurso": "Água",
+    "fonte": "Comunitária",
+    "distancia": "Até 1Km",
+    "latitude": -23.5378,
+    "longitude": -46.6369,
+    "endereco": "Praça da Paz, 12",
+    "contato": "(11) 8765-4321",
+    "horario": "09h às 19h"
+  }
+]
+```
+
+---
+
+### `POST /recursos`
+Cadastra um novo ponto de recurso.
+
+**Body (JSON):**
+```json
+{
+  "nome": "Posto de Apoio",
+  "recurso": "Alimento",
+  "fonte": "Oficial",
+  "distancia": "Até 5Km",
+  "latitude": -23.55,
+  "longitude": -46.63,
+  "endereco": "Rua das Árvores, 45",
+  "contato": "(11) 98888-0000",
+  "horario": "08h às 18h"
+}
+```
+
+---
+
+##  Fontes
+
+### `GET /fontes`
+Retorna as fontes disponíveis:
+
+```json
+["Comunitária", "Oficial"]
+```
+
+---
+
+##  Distâncias
+
+### `GET /distancias`
+Retorna as faixas de distância disponíveis:
+
+```json
+["Até 1Km", "Até 5Km", "Até 10Km"]
+```
 
 ---
 
